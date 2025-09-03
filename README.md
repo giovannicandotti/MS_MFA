@@ -56,7 +56,7 @@ You now need to know the 'tenantId' and the UPN of the user to execute a test.
 
 You can check the functionality by executing the 'pushPopup.ps1' script, which will push the popup OR will answer you back 'challenge'. In this case, this means you can not push whilst you can check the TOTP [to be better investigated].
 
-You can find two PHP codes in the 'PHP' directory; properly inserting corresponding values to 'clientSecret', 'tenantId' and 'email' variables, you are now able to execute the actions.
+You can find two PHP codes in the 'PHP' directory; properly inserting corresponding values to 'clientSecret', 'tenantId' and 'email' variables, you are now able to execute the methods described below.
 
 
 ---
@@ -67,7 +67,9 @@ You can find two PHP codes in the 'PHP' directory; properly inserting correspond
 
 This method is to raise a popup on Authenticator app of the smartphone where the user is configured.
 
-In detail, this part of the configuration is the one responsible for this behaviour, as said by the [Full Story].
+There are limitations in using this approach against the usage done through own Microsoft functions (e.g. login to portal), where geographical data can be included.
+
+Here the question for the user is a simple 'Approve / Deny' question. In detail, this part of the configuration is the one responsible for this behaviour, as said by the [Full Story].
 
 Code snippet:
 ```bash
@@ -85,6 +87,9 @@ Out of the full XML configuration:
 Sometimes, to be better investigated, this option does not popup on Authenticator, and the returned value is 'challenge'.
 
 This means that the operation of MFA could not be completed, and it has to fallback on next option, which is checking the correctness of the TOTP associated to the entry on Authenticator.  Whilst the next method works in every circumstance, the initial one sometimes fail.
+
+Result: 'Approved', 'Denied' or 'challenge'. The latter needs the following call to check TOTP validity, as long as it's not possible to excecute an 'Apply/Deny' request.
+
 
 <h1>> checkTOTP</h1>
 This method is intended to check the correctness of user TOTP, to be inserted in a webpage as an example.
