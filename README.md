@@ -11,8 +11,8 @@ Direct invocation of Microsoft MFA application, with push notification or TOTP v
 
 ## 📚 Table of Contents
 - [Features](#-features)
-- [Two Metrhods Only](#%EF%B8%8F-two-methods-only)
 - [How Does It Work](#-how-does-it-work)
+- [Two Methods Only](#%EF%B8%8F-two-methods-only)
 - [Links](#-links)
 
 ---
@@ -23,6 +23,44 @@ Direct invocation of Microsoft MFA application, with push notification or TOTP v
 - 🔒 Built-in security: no parameters to be sanitized, no customization
 
 ---
+
+## 🧩 How Does It Work
+First of all, you need to generate the 'secret' to be used when calling the methods.
+
+To get it, use the PowerShell script named 'generate.ps1', in the 'powershell' directory.
+
+This has to be run one time only, and it returns the 'secret' for a servicePrincipal indeed, which is the same on all Microsoft O365 tenant, identified by the '981f26a1-7f43-403b-a875-f8b09b8cd720' label.
+
+The script to get the secret:
+```bash
+Connect-MgGraph -Scopes 'Application.ReadWrite.All'
+# Get ID of 'Entra Id MFA Notification Client' Service Principal
+$servicePrincipalId = (Get-MgServicePrincipal -Filter "appid eq '981f26a1-7f43-403b-a875-f8b09b8cd720'").Id
+ 
+$params = @{
+	passwordCredential = @{
+		displayName = "My Application MFA"
+	}
+}
+ 
+# Create Client Secret onto client
+$secret = Add-MgServicePrincipalPassword -ServicePrincipalId $servicePrincipalId -BodyParameter $params
+$secret
+```
+
+After being connected, create the 'secret', linked to the ServicePrincipal. 
+
+That's all you need to to to setup the environment.
+
+You now need to know the 'tenantId' and the UPN of the user to execute a test.
+
+You can check the functionality by executing the 'pushPopup.ps1' script, which will push the popup OR will answer you back 'challenge'. In this case, this means you can not push whilst you can check the TOTP [to be better investigated].
+
+You can find two PHP codes in the 'PHP' directory; properly inserting corresponding values to 'clientSecret', 'tenantId' and 'email' variables, you are now able to execute the actions.
+
+
+---
+
 
 ## 🖼️ Two Methods only
 <h1>> pushPopup</h1>
@@ -69,42 +107,6 @@ Out of the full XML configuration:
 
 ---
 
-## 🧩 How Does It Work
-First of all, you need to generate the 'secret' to be used when calling the methods.
-
-To get it, use the PowerShell script named 'generate.ps1', in the 'powershell' directory.
-
-This has to be run one time only, and it returns the 'secret' for a servicePrincipal indeed, which is the same on all Microsoft O365 tenant, identified by the '981f26a1-7f43-403b-a875-f8b09b8cd720' label.
-
-The script:
-```bash
-Connect-MgGraph -Scopes 'Application.ReadWrite.All'
-# Get ID of 'Entra Id MFA Notification Client' Service Principal
-$servicePrincipalId = (Get-MgServicePrincipal -Filter "appid eq '981f26a1-7f43-403b-a875-f8b09b8cd720'").Id
- 
-$params = @{
-	passwordCredential = @{
-		displayName = "My Application MFA"
-	}
-}
- 
-# Create Client Secret onto client
-$secret = Add-MgServicePrincipalPassword -ServicePrincipalId $servicePrincipalId -BodyParameter $params
-$secret
-```
-
-After being connected, create the 'secret', linked to the ServicePrincipal. 
-
-That's all you need to to to setup the environment.
-
-You now need to know the 'tenantId' and the UPN of the user to execute a test.
-
-You can check the functionality by executing the 'pushPopup.ps1' script, which will push the popup OR will answer you back 'challenge'. In this case, this means you can not push whilst you can check the TOTP [to be better investigated].
-
-You can find two PHP codes in the 'PHP' directory; properly inserting corresponding values to 'clientSecret', 'tenantId' and 'email' variables, you are now able to execute the actions.
-
-
----
 
 ## Links
 Full story [online](https://www.entraneer.com/blog/entra/authentication/transactional-mfa-entra-id) and [locally](docs/fullStory.pdf)
