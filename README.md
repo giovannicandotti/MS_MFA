@@ -88,7 +88,7 @@ Sometimes, to be better investigated, this option does not popup on Authenticato
 
 This means that the operation of MFA could not be completed, and it has to fallback on next option, which is checking the correctness of the TOTP associated to the entry on Authenticator.  Whilst the next method works in every circumstance, the initial one sometimes fail.
 
-Result: 'Approved', 'Denied' or 'challenge'. The latter needs the following call to check TOTP validity, as long as it's not possible to excecute an 'Apply/Deny' request.
+Result: 'Approved', 'Denied' or 'challenge'. The latter needs the following call to following "checkTOTP" method, as long as it's not possible to excecute an 'Apply/Deny' request.
 
 
 <h1>> checkTOTP</h1>
