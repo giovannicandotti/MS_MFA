@@ -54,7 +54,7 @@ That's all you need to to to setup the environment.
 
 You now need to know the 'tenantId' and the UPN of the user to execute a test.
 
-You can check the functionality by executing the 'pushPopup.ps1' script, which will push the popup OR will answer you back 'challenge'. In this case, this means you can not push whilst you can check the TOTP [to be better investigated].
+You can check the functionality by executing the 'pushPopup.ps1' script, which will push the popup when the 'Default sign-in method' of the user is 'Microsoft Authenticator notification'. If the answer is 'challenge', this means you can not push whilst you can check the TOTP; probably the 'Default sign-in method' is set to 'SMS (primary mobile)'.
 
 You can find two PHP codes in the 'PHP' directory; properly inserting corresponding values to 'clientSecret', 'tenantId' and 'email' variables, you are now able to execute the methods described below.
 
@@ -65,7 +65,7 @@ You can find two PHP codes in the 'PHP' directory; properly inserting correspond
 ## 🖼️ Two Methods only
 <h1>> pushPopup</h1>
 
-This method is to raise a popup on Authenticator app of the smartphone where the user is configured.
+This method is to raise a popup on Authenticator app of the smartphone where the user is configured. It works properly when the 'Default sign-in method' of the user is 'Microsoft Authenticator notification'.
 
 There are limitations in using this approach against the usage done through own Microsoft functions (e.g. login to portal), where geographical data can be included.
 
@@ -84,15 +84,12 @@ Out of the full XML configuration:
   <img src="img/pushPopup.png" alt="Screenshot" width="800">
 </p>
 
-Sometimes, to be better investigated, this option does not popup on Authenticator, and the returned value is 'challenge'.
-
-This means that the operation of MFA could not be completed, and it has to fallback on next option, which is checking the correctness of the TOTP associated to the entry on Authenticator.  Whilst the next method works in every circumstance, the initial one sometimes fail.
 
 Result: 'Approved', 'Denied' or 'challenge'. The latter needs the following call to following "checkTOTP" method, as long as it's not possible to excecute an 'Apply/Deny' request.
 
 
 <h1>> checkTOTP</h1>
-This method is intended to check the correctness of user TOTP, to be inserted in a webpage as an example.
+This method is intended to check the correctness of user TOTP, to be inserted in a webpage as an example. It works properly as when the 'Default sign-in method' of the user is 'SMS (primary mobile)' or similar.
 
 In detail, this part of the configuration is the one responsible for this behaviour, and this is an original contribution.
 
